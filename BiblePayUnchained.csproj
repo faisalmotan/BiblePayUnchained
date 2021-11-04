@@ -204,8 +204,8 @@
     <Content Include="FriendRequests.aspx" />
     <Content Include="Images\truthbook-clear.png" />
     <Content Include="Images\VideoRecordIcon.png" />
-    <Content Include="NewsProofOfConcept.aspx" />
     <Content Include="LiveRecord.aspx" />
+    <Content Include="NewsProofOfConcept.aspx" />
     <Content Include="ReportHoursByDeveloper.aspx" />
     <Content Include="Reports.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -573,19 +573,18 @@
     <Compile Include="FriendRequests.aspx.designer.cs">
       <DependentUpon>FriendRequests.aspx</DependentUpon>
     </Compile>
-    <Compile Include="NewsProofOfConcept.aspx.cs">
-      <DependentUpon>NewsProofOfConcept.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="NewsProofOfConcept.aspx.designer.cs">
-      <DependentUpon>NewsProofOfConcept.aspx</DependentUpon>
-    </Compile>
     <Compile Include="LiveRecord.aspx.cs">
       <DependentUpon>LiveRecord.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="LiveRecord.aspx.designer.cs">
       <DependentUpon>LiveRecord.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewsProofOfConcept.aspx.cs">
+      <DependentUpon>NewsProofOfConcept.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewsProofOfConcept.aspx.designer.cs">
+      <DependentUpon>NewsProofOfConcept.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportHoursByDeveloper.aspx.cs">
       <DependentUpon>ReportHoursByDeveloper.aspx</DependentUpon>

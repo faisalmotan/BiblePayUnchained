@@ -1,93 +1,78 @@
-﻿using static Unchained.Common;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Dynamic;
 using System.Linq;
+using System.Net;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using static BiblePayDLL.Shared;
-using static Unchained.DataOps;
-using static BiblePayCommon.Common;
-using static Unchained.BiblePayUtilities;
-using BiblePayCommonNET;
 
 namespace Unchained
 {
-    public partial class NewsProofOfConcept : BBPPage
+    public class News
     {
-        protected new void Page_Load(object sender, EventArgs e)
-        {
+        public string Title { get; set; }
+        public string Link { get; set; }
+        public string Body { get; set; }
+        
 
+    }
+
+    public partial class NewsProofOfConcept : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+           
         }
 
-        protected void UpdateInfo()
+        protected string GetNews()
         {
-            string sMode = Session["leaderboardmode"].ToNonNullString() == "summary" ? "Summary" : "Details";
-            lblMode.Text = sMode;
-
-        }
-        protected string GetLeaderboard()
-        {
-
-            double nSuperblockLimit = 350000;
-
-            string html = "<table class=saved>";
-            // Column headers
-            string sRow = "<tr><th>Address<th width=10%>Nick Name<th>Currency<th>Total BBP<th>Total Foreign<th>USD Value BBP<th>USD Value Foreign<th>Assessed USD<th>Coverage<th>Earnings<th>Strength</tr>";
-            html += sRow;
-            Dictionary<string, PortfolioParticipant> u = GenerateUTXOReport(IsTestNet(this));
-            foreach (KeyValuePair<string, PortfolioParticipant> pp in u)
+            string StrNews = "";
+            using (WebClient wc = new WebClient())
             {
-                double nEarnings = nSuperblockLimit * pp.Value.Strength;
-                if (pp.Value.Strength > 0)
+                var json = wc.DownloadString("https://www.australiannationalreview.com/wp-json/wp/v2/posts?per_page=5");
+
+                var dynamicObject = Json.Decode(json);
+                var jsonSettings = new JsonSerializerSettings()
                 {
-                    sRow = "<tr><td>" + pp.Value.RewardAddress
-                        + "<td>" + pp.Value.NickName
-                        + "<td>Various"
-                        + "<td>" + pp.Value.AmountBBP.ToString()
-                        + "<td>" + pp.Value.AmountForeign.ToString()
-                        + "<td>" + pp.Value.AmountUSDBBP.ToString()
-                        + "<td>" + pp.Value.AmountUSDForeign.ToString()
-                        + "<td>" + pp.Value.AmountUSD.ToString()
-                        + "<td>" + Math.Round(pp.Value.Coverage * 100, 2).ToString() + "%"
-                        + "<td>" + Math.Round(nEarnings, 2).ToString()
-                        + "<td>" + Math.Round(pp.Value.Strength * 100, 2).ToString() + "%</tr>";
-                    html += sRow;
-                    if (lblMode.Text == "Details")
-                    {
-                        string sTD = "<td style='background-color:grey;'>";
-                        for (int i = 0; i < pp.Value.lPortfolios.Count; i++)
-                        {
-                            if (pp.Value.lPortfolios[i].AmountBBP > 0 || pp.Value.lPortfolios[i].AmountForeign > 0)
-                            {
-                                sRow = "<tr>" + sTD + sTD + sTD + pp.Value.lPortfolios[i].Ticker
-                                    + sTD + pp.Value.lPortfolios[i].AmountBBP.ToString()
-                                    + sTD + pp.Value.lPortfolios[i].AmountForeign.ToString()
-                                    + sTD + pp.Value.lPortfolios[i].AmountUSDBBP.ToString()
-                                    + sTD + pp.Value.lPortfolios[i].AmountUSDForeign.ToString()
-                                    + sTD + sTD + sTD + sTD;
-                                html += sRow;
-                            }
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    Formatting = Newtonsoft.Json.Formatting.Indented,
+                    TypeNameHandling = TypeNameHandling.All,
+                    NullValueHandling = NullValueHandling.Include
+                };
 
-                        }
-                    }
+                var dataList = JsonConvert.DeserializeObject<List<ExpandoObject>>(json, jsonSettings);
+
+                List<News> LstNews = new List<News>();
+                int Index = 0;
+                string sHTML = "<table class='news'>";
+                foreach (var item in dataList)
+                {
+                    News news = new News();
+
+                    var Title = dataList[Index].ToList().Where(o => o.Key == "title").FirstOrDefault();
+
+                    news.Title = ((ExpandoObject)Title.Value).FirstOrDefault(x => x.Key == "rendered").Value.ToString();
+                    news.Link = dataList[Index].ToList().Where(o => o.Key == "link").FirstOrDefault().Value.ToString();
+                    news.Body = ((ExpandoObject)((ExpandoObject)dataList[Index]).ToList()[24].Value)
+                                .FirstOrDefault(o => o.Key == "og_description").Value.ToString();
+                    LstNews.Add(news); 
+
+                    Index += 1;
+
+                    sHTML += "<tr><td>";
+                    sHTML += "<a target='_blank' href='" + news.Link + "'><h2 class='headline'>" + news.Title + "</h2></a><br>";
+                    sHTML += "<span class='headline'>" + news.Body + "</span><br><br><a target='_blank' href='" + news.Link + "' style='text-decoration: underline;'>Read more</a><br><br>";
+                    sHTML += "</td>";
+                    sHTML += "</tr>";
                 }
+
+                StrNews = sHTML;
             }
-            html += "</table>";
-            return html;
-        }
-
-        protected void btnSummary_Click(object sender, EventArgs e)
-        {
-            Session["leaderboardmode"] = "summary";
-            UpdateInfo();
-        }
-
-        protected void btnDetail_Click(object sender, EventArgs e)
-        {
-            Session["leaderboardmode"] = "detail";
-            UpdateInfo();
+            return StrNews;
         }
     }
 }
