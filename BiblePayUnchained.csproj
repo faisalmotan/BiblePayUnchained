@@ -194,6 +194,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AddNewsFeedItem.aspx" />
     <Content Include="Admin.aspx" />
     <Content Include="Admin1.aspx" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -226,6 +227,8 @@
     <Content Include="Images\truthbook-clear.png" />
     <Content Include="Images\VideoRecordIcon.png" />
     <Content Include="LiveRecord.aspx" />
+    <Content Include="NewsFeedItemList.aspx" />
+    <Content Include="NewsProofOfConcept.aspx" />
     <Content Include="ReportHoursByDeveloper.aspx" />
     <Content Include="Reports.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -579,6 +582,13 @@
     <Content Include="Bundle.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddNewsFeedItem.aspx.cs">
+      <DependentUpon>AddNewsFeedItem.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AddNewsFeedItem.aspx.designer.cs">
+      <DependentUpon>AddNewsFeedItem.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin.aspx.cs">
       <DependentUpon>Admin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -616,6 +626,19 @@
     </Compile>
     <Compile Include="LiveRecord.aspx.designer.cs">
       <DependentUpon>LiveRecord.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewsFeedItemList.aspx.cs">
+      <DependentUpon>NewsFeedItemList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewsFeedItemList.aspx.designer.cs">
+      <DependentUpon>NewsFeedItemList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewsProofOfConcept.aspx.cs">
+      <DependentUpon>NewsProofOfConcept.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewsProofOfConcept.aspx.designer.cs">
+      <DependentUpon>NewsProofOfConcept.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReportHoursByDeveloper.aspx.cs">
       <DependentUpon>ReportHoursByDeveloper.aspx</DependentUpon>

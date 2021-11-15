@@ -15,30 +15,57 @@ namespace Unchained
         protected void Page_Load(object sender, EventArgs e)
         {
             _EntityName = "NewsFeedSource";
-
-            DataTable dt = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
-
-            string Test = "";
-
+            if (!Page.IsPostBack)
+            {
+                if (Session["Id"] != null)
+                {
+                    Edit(Session["Id"].ToString());
+                }
+            }
         }
+        private void Edit(string Id)
+        {
+            BiblePayCommon.Entity.NewsFeedSource objNewsFeedSource = (BiblePayCommon.Entity.NewsFeedSource)Common.
+                                                GetObject(Common.IsTestNet(this), _EntityName, Id);
+
+
+            txtFeedName.Text = objNewsFeedSource.FeedName;
+            txtUrl.Text = objNewsFeedSource.URL;
+            txtNotes.Text = objNewsFeedSource.Notes;
+            txtWeight.Text = objNewsFeedSource.Weight.ToString();
+            hdnID.Value = objNewsFeedSource.id;
+            Session["Id"] = null;
+         }
 
         protected void btnSave_Click(object sender, EventArgs e)
-        {
-              _EntityName = "NewsFeedSource";
-
-            DataTable dt = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
-
-
+        { 
             BiblePayCommon.IBBPObject o = (BiblePayCommon.IBBPObject)BiblePayCommon.EntityCommon.GetInstance("BiblePayCommon.Entity+" + _EntityName);
-            BiblePayCommon.EntityCommon.SetEntityValue(o, "FeedName", "Test");
-            //BiblePayCommon.EntityCommon.SetEntityValue(o, "Body", txtBody.Text);
-            //BiblePayCommon.EntityCommon.SetEntityValue(o, "TicketNumber", (int)nTicketNumber);
-            BiblePayCommon.EntityCommon.SetEntityValue(o, "id", Guid.NewGuid().ToString());
-            //BiblePayCommon.EntityCommon.SetEntityValue(o, "Disposition", "");
-            //BiblePayCommon.EntityCommon.SetEntityValue(o, "AssignedTo", "");
-             BiblePayCommon.EntityCommon.SetEntityValue(o, "UserID", gUser(this).id);
-            BiblePayCommon.Common.DACResult r = DataOps.InsertIntoTable(this, IsTestNet(this), o, gUser(this));
 
+                        
+            BiblePayCommon.EntityCommon.SetEntityValue(o, "FeedName", txtFeedName.Text);
+            BiblePayCommon.EntityCommon.SetEntityValue(o, "URL", txtUrl.Text);
+            BiblePayCommon.EntityCommon.SetEntityValue(o, "Notes", txtNotes.Text);
+            BiblePayCommon.EntityCommon.SetEntityValue(o, "Weight", txtWeight.Text);
+            if (hdnID.Value != "")
+            {
+                BiblePayCommon.EntityCommon.SetEntityValue(o, "id", hdnID.Value);
+            }
+            else
+            {
+                BiblePayCommon.EntityCommon.SetEntityValue(o, "id", Guid.NewGuid().ToString());
+            }
+
+            BiblePayCommon.EntityCommon.SetEntityValue(o, "UserID", gUser(this).id);
+            
+            BiblePayCommon.Common.DACResult r = DataOps.InsertIntoTable(this, IsTestNet(this), o, gUser(this));
+            
+            lblMsg.Text = "Record Added Successfully";
+            Response.Redirect("NewsFeedItemList.aspx");
+        }
+
+        protected void btnList_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("NewsFeedItemList.aspx");
         }
     }
 }

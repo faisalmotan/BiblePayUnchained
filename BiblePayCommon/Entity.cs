@@ -896,6 +896,44 @@ namespace BiblePayCommon
             }
 
         }
-    
+
+        public class NewsFeedItem : BaseEntity, IBBPObject 
+        { 
+            public string NewsFeedSourceID { get; set; }
+
+            public string URL { get; set; }
+
+            public string Title { get; set; }
+
+            public string Body { get; set; }
+
+            public int Expiration { get; set; }
+
+            public override string GetHash() 
+            { 
+                return GetSha256HashI(organization + NewsFeedSourceID + URL);
+            } 
+        } 
+
+        public class NewsFeedSource : BaseEntity, IBBPObject 
+        {
+
+            public string FeedName { get; set; }
+             
+            public string Notes { get; set; }
+
+            public string URL { get; set; }
+
+            public double Weight { get; set; }
+
+            public override string GetHash() 
+            {
+
+                return GetSha256HashI(organization + URL);
+
+            }
+
+        }
+
     }
 }
