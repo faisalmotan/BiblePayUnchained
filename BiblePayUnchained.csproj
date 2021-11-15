@@ -487,6 +487,8 @@
     <Content Include="Images\VideoRecordIcon.png" />
     <Content Include="LiveRecord.aspx" />
     <Content Include="Meeting.aspx" />
+    <Content Include="NewsFeedItemList.aspx" />
+    <Content Include="NewsProofOfConcept.aspx" />
     <Content Include="ReportHoursByDeveloper.aspx" />
     <Content Include="Reports.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />

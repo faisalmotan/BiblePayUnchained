@@ -40,7 +40,15 @@ namespace Unchained
             {
                 string Id = e.CommandArgument.ToString();
 
-                bool fDeleted = BiblePayDLL.Sidechain.DeleteObject(IsTestNet(this), _EntityName, Id, gUser(this));
+                BiblePayCommon.Entity.NewsFeedSource objNewsFeedSource = (BiblePayCommon.Entity.NewsFeedSource)Common.
+                                                GetObject(Common.IsTestNet(this), _EntityName, Id);
+
+
+                objNewsFeedSource.deleted = 1;
+                BiblePayCommon.Common.DACResult r = DataOps.InsertIntoTable(this, IsTestNet(this), 
+                                                    objNewsFeedSource, gUser(this));
+
+                bool fDeleted = true; //BiblePayDLL.Sidechain.DeleteObject(IsTestNet(this), _EntityName, Id, gUser(this));
                 if (fDeleted)
                 {
                     UICommon.RunScriptSM(this, UICommon.Toast("Deleted", "Your Object was Deleted!"));
@@ -56,9 +64,7 @@ namespace Unchained
             {
                 string Id = e.CommandArgument.ToString();
                 Session["Id"] = Id;
-                Response.Redirect("AddNewsFeedItem.aspx");
-
-
+                Response.Redirect("AddNewsFeedItem.aspx"); 
             }
         }
 
