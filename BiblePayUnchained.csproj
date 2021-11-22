@@ -109,6 +109,7 @@
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DataVisualization" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -519,6 +520,7 @@
     <Content Include="Scripts\waypoint\waypoints.debug.js" />
     <Content Include="Scripts\waypoint\zepto.waypoints.js" />
     <Content Include="Scripts\waypoint\zepto.waypoints.min.js" />
+    <Content Include="SyncFeedItems.aspx" />
     <Content Include="TelegramChat.aspx" />
     <Content Include="TicketAdd.aspx" />
     <Content Include="TicketList.aspx" />
@@ -863,6 +865,7 @@
     </Compile>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Code\FeedItemMethods.cs" />
     <Compile Include="Code\Report.cs" />
     <Compile Include="Friends.aspx.cs">
       <DependentUpon>Friends.aspx</DependentUpon>
@@ -891,6 +894,13 @@
     </Compile>
     <Compile Include="LiveRecord.aspx.designer.cs">
       <DependentUpon>LiveRecord.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Meeting.aspx.cs">
+      <DependentUpon>Meeting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Meeting.aspx.designer.cs">
+      <DependentUpon>Meeting.aspx</DependentUpon>
     </Compile>
     <Compile Include="NewsFeedItemList.aspx.cs">
       <DependentUpon>NewsFeedItemList.aspx</DependentUpon>
@@ -925,6 +935,13 @@
     </Compile>
     <Compile Include="Reports.aspx.designer.cs">
       <DependentUpon>Reports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SyncFeedItems.aspx.cs">
+      <DependentUpon>SyncFeedItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SyncFeedItems.aspx.designer.cs">
+      <DependentUpon>SyncFeedItems.aspx</DependentUpon>
     </Compile>
     <Compile Include="TelegramChat.aspx.cs">
       <DependentUpon>TelegramChat.aspx</DependentUpon>
