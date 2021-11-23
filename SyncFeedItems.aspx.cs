@@ -78,15 +78,16 @@ namespace Unchained
                 string feedName = dtRow["FeedName"].ToString();
                 string url = dtRow["URL"].ToString();
                 Double weight = double.Parse(dtRow["Weight"].ToString());
+                string newsFeedSourceID =  dtRow["id"].ToString();
 
                 List<Entity.NewsFeedItem> lstNewsFeedItems = GetFeedItems(feedName, url, weight);
-                AddNewsFeedItem(lstNewsFeedItems);
+                AddNewsFeedItem(lstNewsFeedItems, newsFeedSourceID);
             }
 
             Response.Redirect("SyncFeedItems.aspx");
         }
 
-        private bool AddNewsFeedItem(List<Entity.NewsFeedItem> lstNewsFeedItems)
+        private bool AddNewsFeedItem(List<Entity.NewsFeedItem> lstNewsFeedItems, string newsFeedSourceID)
         {
             bool isAdded = false;
             _EntityName = "NewsFeedItem";
@@ -94,10 +95,11 @@ namespace Unchained
             foreach (Entity.NewsFeedItem objNewsFeedItem in lstNewsFeedItems)
             {
                 BiblePayCommon.IBBPObject o = (BiblePayCommon.IBBPObject)BiblePayCommon.EntityCommon.GetInstance("BiblePayCommon.Entity+" + _EntityName);
-                BiblePayCommon.EntityCommon.SetEntityValue(o, "NewsFeedSourceID", objNewsFeedItem.NewsFeedSourceID);
+                BiblePayCommon.EntityCommon.SetEntityValue(o, "NewsFeedSourceID", newsFeedSourceID);
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "URL", objNewsFeedItem.URL);
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "Title", objNewsFeedItem.Title);
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "Body", objNewsFeedItem.Body);
+                BiblePayCommon.EntityCommon.SetEntityValue(o, "ImageURL", objNewsFeedItem.ImageURL);
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "Expiration", objNewsFeedItem.Expiration);
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "id", Guid.NewGuid().ToString());
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "UserID", gUser(this).id);

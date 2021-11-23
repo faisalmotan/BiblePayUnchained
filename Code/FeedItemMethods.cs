@@ -79,9 +79,27 @@ namespace Unchained.Code
                     foreach (SyndicationItem item in feed.Items)
                     {
                         Entity.NewsFeedItem ObjNewsFeedItems = new Entity.NewsFeedItem();
+                        if (item.Links != null)
+                        {
+                            if (item.Links.Count() > 0)
+                            {
+                                foreach (var Links in item.Links)
+                                {
+                                    if (Links.MediaType != null)
+                                    {
+                                        if (Links.MediaType.ToString() == "image/jpg")
+                                        {
+                                            ObjNewsFeedItems.ImageURL = Links.Uri.AbsoluteUri.ToString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
 
                         ObjNewsFeedItems.URL = item.Id;
-                        
+
+
                         if (item.Title !=null)
                             ObjNewsFeedItems.Title = item.Title.Text;
 

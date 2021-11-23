@@ -426,6 +426,8 @@ namespace BiblePayCommon
             public string Title { get; set; }
             public string Body { get; set; }
             public int Expiration { get; set; }
+
+            public string ImageURL { get; set; }
             public override string GetHash()
             {
                 return GetSha256HashI(organization + NewsFeedSourceID + URL);

@@ -41,8 +41,33 @@ ul {
     </table>
     <hr />
 
-
-    <%=GetNews() %>
+    <asp:Repeater ID="Repeater1" runat="server">  
+        <ItemTemplate> 
+        <table> 
+          <tr>
+              <td>
+                    <a target='_blank' href='<%#Eval("URL")%>'><h2 class='headline'><%#Eval("Title")%></h2></a><br>
+                  <img width='150px' height='100px' src='<%#Eval("ImageURL")%>' />
+                  <br>
+                    <span class='headline'><%#Eval("Body")%></span><br><br>
+                    <a target='_blank' href='<%#Eval("URL")%>' style='text-decoration: underline;'>Read more</a><br><br>
+              </td>
+          </tr>
+        </table>
+        </ItemTemplate>
+    </asp:Repeater>
+   <br />  
+        <div style="text-align:center">  
+            <asp:Repeater ID="Repeater2" runat="server" OnItemCommand="Repeater2_ItemCommand">  
+                <ItemTemplate>  
+                    <asp:LinkButton ID="lnkPage"  
+                        Style="padding: 8px; margin: 2px; background: lightgray; border: solid 1px #666; color: black; font-weight: bold"  
+                        CommandName="Page" CommandArgument="<%# Container.DataItem %>" runat="server" Font-Bold="True"><%# Container.DataItem %>  
+                    </asp:LinkButton>  
+                </ItemTemplate>  
+            </asp:Repeater>  
+        </div>  
+ 
 
 
 
