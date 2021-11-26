@@ -41,21 +41,41 @@ ul {
     </table>
     <hr />
 
-    <asp:Repeater ID="Repeater1" runat="server">  
+    <asp:Repeater ID="Repeater1" runat="server" >  
         <ItemTemplate> 
         <table> 
           <tr>
               <td>
                     <a target='_blank' href='<%#Eval("URL")%>'><h2 class='headline'><%#Eval("Title")%></h2></a><br>
-                  <img width='150px' height='100px' src='<%#Eval("ImageURL")%>' />
+                  <img width='100%' height='500px' src='<%#Eval("ImageURL")%>' />
                   <br>
                     <span class='headline'><%#Eval("Body")%></span><br><br>
                     <a target='_blank' href='<%#Eval("URL")%>' style='text-decoration: underline;'>Read more</a><br><br>
               </td>
+         
           </tr>
         </table>
         </ItemTemplate>
     </asp:Repeater>
+
+    <%--<asp:DataList ID="DataList1" runat="server" DataKeyField="id" RepeatDirection="Horizontal"
+    EnableViewState="False">
+        <ItemTemplate>
+         <table> 
+          <tr>
+              <td>
+                  <a target='_blank' href='<%#Eval("URL")%>'><h2 class='headline'><%#Eval("Title")%></h2></a><br>
+                  <img width='100%' height='500px' src='<%#Eval("ImageURL")%>' />
+                  <br>
+                    <span class='headline'><%#Eval("Body")%></span><br><br>
+                  <a target='_blank' href='<%#Eval("URL")%>' style='text-decoration: underline;'>Read more</a><br><br>
+              </td>
+
+         
+          </tr>
+        </table>
+            </ItemTemplate>
+        </asp:DataList>--%>
    <br />  
         <div style="text-align:center">  
             <asp:Repeater ID="Repeater2" runat="server" OnItemCommand="Repeater2_ItemCommand">  

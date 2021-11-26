@@ -41,7 +41,26 @@ namespace Unchained
         {
             _EntityName = "NewsFeedItem";
             DataTable dtData = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
-           
+
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("URL");
+            dt.Columns.Add("Title");
+            dt.Columns.Add("Body");
+            dt.Columns.Add("Expiration");
+            dt.Columns.Add("id");
+            dt.Columns.Add("URLCol2");
+            dt.Columns.Add("TitleCol2");
+            dt.Columns.Add("BodyCol2");
+            dt.Columns.Add("ExpirationCol2");
+            dt.Columns.Add("idCol2");
+
+            foreach (DataRow item in dtData.Rows)
+            {
+                dt.Rows.Add(item["URL"], item["Title"], item["Body"], item["Expiration"], item["id"],
+                            item["URLCol2"], item["TitleCol"], item["BodyCol2"], item["ExpirationCol2"], item["idCol2"]);
+            }
+
 
             PagedDataSource pdsData = new PagedDataSource();
             DataView dv = new DataView(dtData);
@@ -56,7 +75,7 @@ namespace Unchained
             {
                 Repeater2.Visible = true;
                 ArrayList alPages = new ArrayList();
-                for (int i = 1; i <= pdsData.PageCount; i++)
+                for (int i = 1; i <= pdsData.PageCount-1; i++)
                     alPages.Add((i).ToString());
                 Repeater2.DataSource = alPages;
                 Repeater2.DataBind();

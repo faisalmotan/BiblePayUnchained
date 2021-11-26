@@ -78,6 +78,13 @@ namespace Unchained.Code
                     reader.Close();
                     foreach (SyndicationItem item in feed.Items)
                     {
+                        //if (item.Id.ToString() == "https://www.breitbart.com/clips/2021/11/22/kendi-rittenhouse-case-will-make-more-people-bring-guns-to-protests-and-claim-self-defense-if-they-kill-someone-trying-to-disarm-them/")
+                        //{
+
+                        //    string test = "";
+                        //}
+
+
                         Entity.NewsFeedItem ObjNewsFeedItems = new Entity.NewsFeedItem();
                         if (item.Links != null)
                         {
@@ -87,7 +94,9 @@ namespace Unchained.Code
                                 {
                                     if (Links.MediaType != null)
                                     {
-                                        if (Links.MediaType.ToString() == "image/jpg")
+                                        if (Links.MediaType.ToLower().ToString() == "image/jpg"  || Links.MediaType.ToLower().ToString() ==  "image/png" 
+                                            || Links.MediaType.ToLower().ToString() == "image/jpeg"
+                                            || Links.MediaType.ToLower().ToString() == "image/ashx")
                                         {
                                             ObjNewsFeedItems.ImageURL = Links.Uri.AbsoluteUri.ToString();
                                         }

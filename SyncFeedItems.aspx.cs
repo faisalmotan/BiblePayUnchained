@@ -34,7 +34,24 @@ namespace Unchained
         {
             _EntityName = "NewsFeedItem";
             DataTable dt = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
-            GvNewsFeedItem.DataSource = dt;
+
+            _EntityName = "NewsFeedSource";
+            DataTable dt2 = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
+
+            var JoinResult = (from item in dt.AsEnumerable()
+                              join source in dt2.AsEnumerable()
+                              on item.Field<string>("newsFeedSourceID") equals source.Field<string>("Id")
+                              select new
+                              {
+                                  id = item.Field<string>("id"),
+                                  URL = item.Field<string>("URL"),
+                                  Title = item.Field<string>("Title"),
+                                  Body = item.Field<string>("Body"),
+                                  Expiration = item.Field<string>("Expiration"),
+                                  FeedName = source.Field<string>("FeedName")
+                              }).ToList();
+
+            GvNewsFeedItem.DataSource = JoinResult;
             GvNewsFeedItem.DataBind();
         }
 
@@ -82,6 +99,7 @@ namespace Unchained
 
                 List<Entity.NewsFeedItem> lstNewsFeedItems = GetFeedItems(feedName, url, weight);
                 AddNewsFeedItem(lstNewsFeedItems, newsFeedSourceID);
+                
             }
 
             Response.Redirect("SyncFeedItems.aspx");

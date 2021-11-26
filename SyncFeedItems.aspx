@@ -61,6 +61,9 @@
             <asp:BoundField DataField="Expiration" HeaderText="Expiration">
             <HeaderStyle ForeColor="White" />
             </asp:BoundField> 
+             <asp:BoundField DataField="FeedName" HeaderText="FeedName">
+            <HeaderStyle ForeColor="White" />
+            </asp:BoundField> 
             <asp:TemplateField>
                 <ItemTemplate>
                     <asp:LinkButton ID="btnDelete" OnClientClick="return OnDelete();" runat="server" CommandArgument='<%# Bind("id") %>' CommandName="Delete" Font-Underline="true">Delete</asp:LinkButton>
