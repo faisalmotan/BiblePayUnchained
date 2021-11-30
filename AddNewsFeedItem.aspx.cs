@@ -33,6 +33,7 @@ namespace Unchained
             txtUrl.Text = objNewsFeedSource.URL;
             txtNotes.Text = objNewsFeedSource.Notes;
             txtWeight.Text = objNewsFeedSource.Weight.ToString();
+            txtPoliticalLeaning.Text = objNewsFeedSource.PoliticalLeaning.ToString();
             hdnID.Value = objNewsFeedSource.id;
             Session["Id"] = null;
          }
@@ -46,6 +47,7 @@ namespace Unchained
             BiblePayCommon.EntityCommon.SetEntityValue(o, "URL", txtUrl.Text);
             BiblePayCommon.EntityCommon.SetEntityValue(o, "Notes", txtNotes.Text);
             BiblePayCommon.EntityCommon.SetEntityValue(o, "Weight", txtWeight.Text);
+            BiblePayCommon.EntityCommon.SetEntityValue(o, "PoliticalLeaning", txtPoliticalLeaning.Text);
             if (hdnID.Value != "")
             {
                 BiblePayCommon.EntityCommon.SetEntityValue(o, "id", hdnID.Value);

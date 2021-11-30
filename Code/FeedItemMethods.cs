@@ -1,4 +1,5 @@
 ﻿using BiblePayCommon;
+using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,37 @@ namespace Unchained.Code
 
                         var Title = dataList[Index].ToList().Where(o => o.Key == "title").FirstOrDefault();
 
+
+                        var content = dataList[Index].ToList().Where(o => o.Key == "content").FirstOrDefault();
+
+                        var rendered = ((ExpandoObject)content.Value).FirstOrDefault(x => x.Key == "rendered").Value.ToString();
+                        int start = rendered.IndexOf("src");
+                        string src = ""; 
+                        var htmlDoc = new HtmlDocument()
+                        {
+                            OptionFixNestedTags = true,
+                            OptionAutoCloseOnEnd = true
+                        };
+                        try
+                        {
+
+
+
+                            htmlDoc.LoadHtml(rendered);
+
+                            foreach (HtmlNode img in htmlDoc.DocumentNode.SelectNodes("//img"))
+                            {
+                                var att = img.Attributes["src"];
+                                src = att.Value;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+
+                        }
+                        
+                        news.ImageURL = src;
                         news.Title = ((ExpandoObject)Title.Value).FirstOrDefault(x => x.Key == "rendered").Value.ToString();
                         news.URL = dataList[Index].ToList().Where(o => o.Key == "link").FirstOrDefault().Value.ToString();
                         news.Body = ((ExpandoObject)((ExpandoObject)dataList[Index]).ToList()[24].Value)
@@ -94,9 +126,7 @@ namespace Unchained.Code
                                 {
                                     if (Links.MediaType != null)
                                     {
-                                        if (Links.MediaType.ToLower().ToString() == "image/jpg"  || Links.MediaType.ToLower().ToString() ==  "image/png" 
-                                            || Links.MediaType.ToLower().ToString() == "image/jpeg"
-                                            || Links.MediaType.ToLower().ToString() == "image/ashx")
+                                        if (Links.MediaType.ToLower().ToString().Contains("image"))
                                         {
                                             ObjNewsFeedItems.ImageURL = Links.Uri.AbsoluteUri.ToString();
                                         }

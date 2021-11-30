@@ -19,7 +19,7 @@ namespace Unchained
 { 
     public partial class NewsProofOfConcept : BBPPage
     {
-        private int iPageSize = 5;
+        private int iPageSize = 10;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -39,6 +39,14 @@ namespace Unchained
 
         private void GetNews()
         {
+
+            _EntityName = "NewsFeedSource";
+            DataTable dtDataSource = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
+
+            dtDataSource = dtDataSource.SortDataTable("time desc, weight");
+
+
+
             _EntityName = "NewsFeedItem";
             DataTable dtData = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
 
@@ -48,22 +56,53 @@ namespace Unchained
             dt.Columns.Add("Title");
             dt.Columns.Add("Body");
             dt.Columns.Add("Expiration");
+            dt.Columns.Add("ImageURL");
             dt.Columns.Add("id");
+            dt.Columns.Add("Display");
             dt.Columns.Add("URLCol2");
             dt.Columns.Add("TitleCol2");
             dt.Columns.Add("BodyCol2");
             dt.Columns.Add("ExpirationCol2");
+            dt.Columns.Add("ImageURLCol2");
             dt.Columns.Add("idCol2");
+            dt.Columns.Add("DisplayCol2");
+
+ 
+            List<BiblePayCommon.Entity.NewsFeedItem> newsFeedItem = new List<Entity.NewsFeedItem>();
+
+            int Index = 0;
 
             foreach (DataRow item in dtData.Rows)
             {
-                dt.Rows.Add(item["URL"], item["Title"], item["Body"], item["Expiration"], item["id"],
-                            item["URLCol2"], item["TitleCol"], item["BodyCol2"], item["ExpirationCol2"], item["idCol2"]);
+                if (Index == 0)
+                {
+                    BiblePayCommon.Entity.NewsFeedItem ObjNewsFeedItem = new Entity.NewsFeedItem();
+                    ObjNewsFeedItem.Body = item["Body"].ToString();
+                    ObjNewsFeedItem.Title = item["Title"].ToString();
+                    ObjNewsFeedItem.URL = item["URL"].ToString();
+                    ObjNewsFeedItem.Expiration = int.Parse(item["Expiration"].ToString());
+                    ObjNewsFeedItem.ImageURL = item["ImageURL"].ToString();
+                    newsFeedItem.Add(ObjNewsFeedItem);
+                    Index += 1;
+                }
+                else if (Index == 1)
+                {
+                    var newsFeedObject = newsFeedItem.FirstOrDefault();
+                    string Display = (newsFeedObject.ImageURL == null || newsFeedObject.ImageURL == "") ? "none" : "block";
+                    string Display2 = (item["ImageURL"] == null || item["ImageURL"].ToString() == "") ? "none" : "block";
+
+
+                    dt.Rows.Add(newsFeedObject.URL,newsFeedObject.Title,newsFeedObject.Body,newsFeedObject.Expiration, newsFeedObject.ImageURL,newsFeedObject.id,Display,
+                                item["URL"], item["Title"], item["Body"], item["Expiration"], item["ImageURL"], item["id"],Display2);
+
+                    newsFeedItem.Clear();
+                    Index = 0;
+                } 
             }
 
 
             PagedDataSource pdsData = new PagedDataSource();
-            DataView dv = new DataView(dtData);
+            DataView dv = new DataView(dt);
             pdsData.DataSource = dv;
             pdsData.AllowPaging = true;
             pdsData.PageSize = iPageSize;
