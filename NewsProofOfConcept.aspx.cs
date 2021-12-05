@@ -43,12 +43,57 @@ namespace Unchained
             _EntityName = "NewsFeedSource";
             DataTable dtDataSource = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
 
-            dtDataSource = dtDataSource.SortDataTable("time desc, weight");
-
-
-
             _EntityName = "NewsFeedItem";
             DataTable dtData = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
+
+           dtData = dtData.SortDataTable("time desc");
+
+
+            Dictionary<Entity.NewsFeedSource, List<Entity.NewsFeedItem>> ObjFeeds = new Dictionary<Entity.NewsFeedSource, List<Entity.NewsFeedItem>>();
+            foreach (DataRow item in dtDataSource.Rows)
+            {
+                Entity.NewsFeedSource newsFeedSource = new Entity.NewsFeedSource();
+                newsFeedSource.FeedName = item["FeedName"].ToString();
+                newsFeedSource.id = item["id"].ToString();
+                newsFeedSource.URL = item["URL"].ToString();
+                newsFeedSource.time = Convert.ToInt64( item["time"]);
+                newsFeedSource.Weight = item["Weight"].ToDouble();
+                //newsFeedSource.PoliticalLeaning = item["PoliticalLeaning"].ToDouble();
+
+
+                string sqlWhere = $"NewsFeedSourceID={item["id"].ToString()}";
+                DataRow[] dataRows = dtData.Select(sqlWhere);
+
+                List<Entity.NewsFeedItem> lstItemSource = new List<Entity.NewsFeedItem>();
+                foreach (DataRow tempRow in dataRows)
+                {
+                    Entity.NewsFeedItem ObjNewsFeedItem = new Entity.NewsFeedItem();
+                    ObjNewsFeedItem.Body = tempRow["Body"].ToString();
+                    ObjNewsFeedItem.ImageURL = tempRow["ImageURL"].ToString();
+                    ObjNewsFeedItem.NewsFeedSourceID = tempRow["NewsFeedSourceID"].ToString();
+                    ObjNewsFeedItem.id = tempRow["id"].ToString();
+                    ObjNewsFeedItem.URL = tempRow["URL"].ToString();
+                    ObjNewsFeedItem.time = Convert.ToInt64(tempRow["time"]);
+                    ObjNewsFeedItem.Expiration = Convert.ToInt32(tempRow["Expiration"]);
+                    lstItemSource.Add(ObjNewsFeedItem);
+                }
+                ObjFeeds.Add(newsFeedSource, lstItemSource);
+            }
+
+            List<Entity.NewsFeedItem> FinalLstItemSource = new List<Entity.NewsFeedItem>();
+
+            foreach (var item in ObjFeeds)
+            {
+                Random random = new Random();
+                var randomWeight = random.Next(0, 25);
+
+                if (randomWeight == item.Key.Weight)
+                {
+                    FinalLstItemSource.AddRange(item.Value.ToList());
+                }
+            }
+
+
 
 
             DataTable dt = new DataTable();
