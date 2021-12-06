@@ -32,6 +32,18 @@ ul {
     word-wrap: break-word;
     overflow: hidden;
     max-height: 2.6em;
+        padding-left: 16px;
+        padding-right:10px;
+        border-bottom: 1px solid;
+        background-color: aliceblue;
+    }
+    .img {
+       
+    height: 300px;
+    width: 410px;
+    margin-left: 45px;
+    border: 10px solid black;
+
     }
 </style>
  
@@ -54,17 +66,17 @@ ul {
           <tr>
               <td style="vertical-align:top; text-align:left; border:1px solid black; width:500px">
                     <a target='_blank' href='<%#Eval("URL")%>'><h3 class='headline CustomNew'><%#Eval("Title")%></h3></a><br>
-                  <img width='500px' height='300px' src='<%#Eval("ImageURL")%>' style="display:<%#Eval("Display")%>" />
+                  <img width='500px' height='300px' src='<%#Eval("ImageURL")%>' style="display:<%#Eval("Display")%>" class="img" />
                   <br>
                     <span class='headline'><%#Eval("Body")%></span><br><br>
-                    <a target='_blank' href='<%#Eval("URL")%>' style='text-decoration: underline;'>Read more</a><br><br>
+                    <a target='_blank' href='<%#Eval("URL")%>' style='text-decoration: underline;margin-left: 10px;'>Read more </a><%#Eval("Body").ToString().Substring(0,10)%>....<br><br>
               </td>
                <td  style="vertical-align:top; text-align:left; border:1px solid black; width:500px">
                     <a target='_blank' href='<%#Eval("URLCol2")%>'><h3 class='headline CustomNew'><%#Eval("TitleCol2")%></h3></a><br>
-                  <img width='500px' height='300px' src='<%#Eval("ImageURLCol2")%>'  style="display:<%#Eval("DisplayCol2")%>"  />
+                  <img width='500px' height='300px' src='<%#Eval("ImageURLCol2")%>'  style="display:<%#Eval("DisplayCol2")%>" class="img" />
                   <br>
                     <span class='headline'><%#Eval("BodyCol2")%></span><br><br>
-                    <a target='_blank' href='<%#Eval("URLCol2")%>' style='text-decoration: underline;'>Read more</a><br><br>
+                    <a target='_blank' href='<%#Eval("URLCol2")%>' style='text-decoration: underline;margin-left: 10px;'>Read more  </a><%#Eval("BodyCol2").ToString().Substring(0,10)%>....<br><br>
               </td>
          
           </tr>

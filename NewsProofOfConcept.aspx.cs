@@ -31,7 +31,7 @@ namespace Unchained
                 }
                 else
                 {
-                    ViewState["PageNumber"] = 0;
+                    ViewState["PageNumber"] = 1;
                 }
                 GetNews();
             }
@@ -39,60 +39,69 @@ namespace Unchained
 
         private void GetNews()
         {
-
             _EntityName = "NewsFeedSource";
             DataTable dtDataSource = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
 
             _EntityName = "NewsFeedItem";
             DataTable dtData = BiblePayDLL.Sidechain.RetrieveDataTable3(IsTestNet(this), _EntityName);
+            dtData = dtData.SortDataTable("time desc");
 
-           dtData = dtData.SortDataTable("time desc");
-
-
+            List<Entity.NewsFeedItem> lstItemSource = new List<Entity.NewsFeedItem>();
             Dictionary<Entity.NewsFeedSource, List<Entity.NewsFeedItem>> ObjFeeds = new Dictionary<Entity.NewsFeedSource, List<Entity.NewsFeedItem>>();
-            foreach (DataRow item in dtDataSource.Rows)
+            for (int iRowNumber = 0; iRowNumber < 5000; iRowNumber++)
             {
-                Entity.NewsFeedSource newsFeedSource = new Entity.NewsFeedSource();
-                newsFeedSource.FeedName = item["FeedName"].ToString();
-                newsFeedSource.id = item["id"].ToString();
-                newsFeedSource.URL = item["URL"].ToString();
-                newsFeedSource.time = Convert.ToInt64( item["time"]);
-                newsFeedSource.Weight = item["Weight"].ToDouble();
-                //newsFeedSource.PoliticalLeaning = item["PoliticalLeaning"].ToDouble();
-
-
-                string sqlWhere = $"NewsFeedSourceID={item["id"].ToString()}";
-                DataRow[] dataRows = dtData.Select(sqlWhere);
-
-                List<Entity.NewsFeedItem> lstItemSource = new List<Entity.NewsFeedItem>();
-                foreach (DataRow tempRow in dataRows)
+                foreach (DataRow item in dtDataSource.Rows)
                 {
-                    Entity.NewsFeedItem ObjNewsFeedItem = new Entity.NewsFeedItem();
-                    ObjNewsFeedItem.Body = tempRow["Body"].ToString();
-                    ObjNewsFeedItem.ImageURL = tempRow["ImageURL"].ToString();
-                    ObjNewsFeedItem.NewsFeedSourceID = tempRow["NewsFeedSourceID"].ToString();
-                    ObjNewsFeedItem.id = tempRow["id"].ToString();
-                    ObjNewsFeedItem.URL = tempRow["URL"].ToString();
-                    ObjNewsFeedItem.time = Convert.ToInt64(tempRow["time"]);
-                    ObjNewsFeedItem.Expiration = Convert.ToInt32(tempRow["Expiration"]);
-                    lstItemSource.Add(ObjNewsFeedItem);
+                    Entity.NewsFeedSource newsFeedSource = new Entity.NewsFeedSource();
+                    newsFeedSource.FeedName = item["FeedName"].ToString();
+                    newsFeedSource.id = item["id"].ToString();
+                    newsFeedSource.URL = item["URL"].ToString();
+                    newsFeedSource.time = Convert.ToInt64(item["time"]);
+                    newsFeedSource.Weight = item["Weight"].ToDouble();
+                    //newsFeedSource.PoliticalLeaning = item["PoliticalLeaning"].ToDouble();
+
+                    string sqlWhere = $"NewsFeedSourceID={item["id"].ToString()}";
+                    DataRow[] dataRows = dtData.Select(sqlWhere);
+
+                    int iNFI = 0;
+                    foreach (DataRow tempRow in dataRows)
+                    {
+                        if (iNFI >= iRowNumber)
+                        {
+
+                            Random random = new Random();
+                            var randomWeight = random.Next(0, 100);
+
+                            if (newsFeedSource.Weight <= randomWeight)
+                            {
+                                Entity.NewsFeedItem ObjNewsFeedItem = new Entity.NewsFeedItem();
+                                ObjNewsFeedItem.Body = tempRow["Body"].ToString();
+                                ObjNewsFeedItem.Title = tempRow["Title"].ToString();
+                                ObjNewsFeedItem.ImageURL = tempRow["ImageURL"].ToString();
+                                ObjNewsFeedItem.NewsFeedSourceID = tempRow["NewsFeedSourceID"].ToString();
+                                ObjNewsFeedItem.id = tempRow["id"].ToString();
+                                ObjNewsFeedItem.URL = tempRow["URL"].ToString();
+                                ObjNewsFeedItem.time = Convert.ToInt64(tempRow["time"]);
+                                ObjNewsFeedItem.Expiration = Convert.ToInt32(tempRow["Expiration"]);
+                                lstItemSource.Add(ObjNewsFeedItem);
+                            }
+                            // break whether we have chosen one for this row or not
+                            break;
+                        }
+                        iNFI++;
+                    }
+                    if (lstItemSource.Count > 0)
+                        ObjFeeds.Add(newsFeedSource, lstItemSource);
                 }
-                ObjFeeds.Add(newsFeedSource, lstItemSource);
+                // Break out when we have 50 *chosen* items:
+                if (ObjFeeds.Count >= 50)
+                    break;
+
             }
 
-            List<Entity.NewsFeedItem> FinalLstItemSource = new List<Entity.NewsFeedItem>();
 
-            foreach (var item in ObjFeeds)
-            {
-                Random random = new Random();
-                var randomWeight = random.Next(0, 25);
-
-                if (randomWeight == item.Key.Weight)
-                {
-                    FinalLstItemSource.AddRange(item.Value.ToList());
-                }
-            }
-
+            // To display the feeds in v1.0, you can loop through the dictionary of items by time descending to start.
+            // In v2.0 we can apply the politicalLeaning to the dictionary to show the user results based on their slider value (however, that will require you to load up the dictionary with more than 50 and just show the top 50 on the screen).
 
 
 
@@ -117,16 +126,16 @@ namespace Unchained
 
             int Index = 0;
 
-            foreach (DataRow item in dtData.Rows)
+            foreach (Entity.NewsFeedItem item in lstItemSource)
             {
                 if (Index == 0)
                 {
                     BiblePayCommon.Entity.NewsFeedItem ObjNewsFeedItem = new Entity.NewsFeedItem();
-                    ObjNewsFeedItem.Body = item["Body"].ToString();
-                    ObjNewsFeedItem.Title = item["Title"].ToString();
-                    ObjNewsFeedItem.URL = item["URL"].ToString();
-                    ObjNewsFeedItem.Expiration = int.Parse(item["Expiration"].ToString());
-                    ObjNewsFeedItem.ImageURL = item["ImageURL"].ToString();
+                    ObjNewsFeedItem.Body = item.Body;
+                    ObjNewsFeedItem.Title = item.Title;
+                    ObjNewsFeedItem.URL = item.URL;
+                    ObjNewsFeedItem.Expiration = item.Expiration;
+                    ObjNewsFeedItem.ImageURL = item.ImageURL;
                     newsFeedItem.Add(ObjNewsFeedItem);
                     Index += 1;
                 }
@@ -134,11 +143,11 @@ namespace Unchained
                 {
                     var newsFeedObject = newsFeedItem.FirstOrDefault();
                     string Display = (newsFeedObject.ImageURL == null || newsFeedObject.ImageURL == "") ? "none" : "block";
-                    string Display2 = (item["ImageURL"] == null || item["ImageURL"].ToString() == "") ? "none" : "block";
+                    string Display2 = (item.ImageURL == null || item.ImageURL.ToString() == "") ? "none" : "block";
 
 
                     dt.Rows.Add(newsFeedObject.URL,newsFeedObject.Title,newsFeedObject.Body,newsFeedObject.Expiration, newsFeedObject.ImageURL,newsFeedObject.id,Display,
-                                item["URL"], item["Title"], item["Body"], item["Expiration"], item["ImageURL"], item["id"],Display2);
+                                item.URL, item.Title, item.Body, item.Expiration, item.ImageURL, item.id,Display2);
 
                     newsFeedItem.Clear();
                     Index = 0;
@@ -152,14 +161,14 @@ namespace Unchained
             pdsData.AllowPaging = true;
             pdsData.PageSize = iPageSize;
             if (ViewState["PageNumber"] != null)
-                pdsData.CurrentPageIndex = Convert.ToInt32(ViewState["PageNumber"]);
+                pdsData.CurrentPageIndex = Convert.ToInt32(ViewState["PageNumber"])-1;
             else
                 pdsData.CurrentPageIndex = 0;
             if (pdsData.PageCount > 1)
             {
                 Repeater2.Visible = true;
                 ArrayList alPages = new ArrayList();
-                for (int i = 1; i <= pdsData.PageCount-1; i++)
+                for (int i = 1; i <= pdsData.PageCount; i++)
                     alPages.Add((i).ToString());
                 Repeater2.DataSource = alPages;
                 Repeater2.DataBind();
